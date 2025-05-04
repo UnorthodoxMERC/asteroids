@@ -11,6 +11,12 @@ if __name__ == '__main__':
     main()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-while 1 == 1:
-    pygame.Surface.fill(color=(0, 0, 0))
-    pygame.display.flip(screen)
+
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    
+    screen.fill('black')
+    pygame.display.flip()
