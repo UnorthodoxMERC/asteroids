@@ -4,9 +4,11 @@ from circleshape import CircleShape
 
 
 class Player(CircleShape):
-    def __init__(self, x, y):
-        super().__init__(x, y, PLAYER_RADIUS)
+    def __init__(self, x, y, radius, shots_group):
+        super().__init__(x, y, radius)
         self.rotation = 0
+        self.shots_group = shots_group
+        
 
     def draw(self, screen):
         pygame.draw.polygon(screen, "white", self.triangle(), 2)
@@ -41,19 +43,20 @@ class Player(CircleShape):
         self.position += forward * PLAYER_SPEED * dt
 
     def shoot(self):
-        shot_pos = self.position
+        new_shot = Shot(self.position.x, self.position.y, SHOT_RADIUS)
         direction = pygame.Vector2(0, 1)
-        rotated = direction.rotate(self.angle)
-        velocity = rotated * PLAYER_SHOOT_SPEED
-
+        direction = direction.rotate(self.rotation)
+        new_shot.velocity = direction * PLAYER_SHOOT_SPEED
+        self.shots_group.add(new_shot)
+        
 
 class Shot(CircleShape):
-    def __init__(self, x, y, radius, velocity):
-            super().__init__(x, y, radius)
-            self.velocity = velocity
+    def __init__(self, x, y, radius):
+        super().__init__(x, y, radius)
+            
         
     def draw(self, screen):
-            pygame.draw.circle(screen, "white", self.position, self.radius, 2) 
+        pygame.draw.circle(screen, "white", self.position, self.radius) 
 
     def update(self, dt):
-            self.position += (self.velocity * dt)
+        self.position += (self.velocity * dt)
